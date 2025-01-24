@@ -1,0 +1,31 @@
+body {
+    background-color: #222;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.game-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#tetris {
+    background-color: #000;
+    border: 1px solid #000;
+}
+
+.game-info {
+    color: #fff;
+    margin-right: 20px;
+    text-align: center;
+}
+
+#next-block {
+    background-color: #000;
+    border: 1px solid #000;
+}

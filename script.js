@@ -5,10 +5,13 @@ const nextContext = nextCanvas.getContext('2d');
 const scale = 40;
 const arenaWidth = 15;
 const arenaHeight = 20;
-const dropInterval = 1000;
+const dropInterval = 1000; // 初始下落间隔时间为1秒
 let dropCounter = 0;
 let lastTime = 0;
 let score = 0;
+let gameDuration = 0; // 添加: 用于跟踪游戏持续时间
+const speedIncreaseInterval = 300000; // 5分钟，单位为毫秒
+const speedIncreaseRate = 0.9; // 每次速度增加的比率
 const colors = [
     null,
     '#FFA500', // 橘黄色
@@ -214,8 +217,16 @@ function update(time = 0) {
     lastTime = time;
 
     dropCounter += deltaTime;
+    gameDuration += deltaTime; // 更新游戏持续时间
+
     if (dropCounter > dropInterval) {
         playerDrop();
+    }
+
+    // 检查是否需要增加速度
+    if (gameDuration >= speedIncreaseInterval) {
+        dropInterval *= speedIncreaseRate; // 增加速度
+        gameDuration = 0; // 重置游戏持续时间
     }
 
     context.clearRect(0, 0, canvas.width, canvas.height);
@@ -268,6 +279,44 @@ const player = {
     pos: { x: 0, y: 0 },
     matrix: null,
 };
+
+let touchStartX = 0;
+let touchStartY = 0;
+let touchMoveX = 0;
+let touchMoveY = 0;
+let touchStartTime = 0;
+
+canvas.addEventListener('touchstart', (event) => {
+    touchStartX = event.touches[0].clientX;
+    touchStartY = event.touches[0].clientY;
+    touchStartTime = Date.now();
+});
+
+canvas.addEventListener('touchmove', (event) => {
+    touchMoveX = event.touches[0].clientX;
+    touchMoveY = event.touches[0].clientY;
+});
+
+canvas.addEventListener('touchend', (event) => {
+    const deltaX = touchMoveX - touchStartX;
+    const deltaY = touchMoveY - touchStartY;
+    const deltaTime = Date.now() - touchStartTime;
+
+    if (deltaTime < 300 && Math.abs(deltaX) < 30 && Math.abs(deltaY) < 30) {
+        // Short tap, rotate left
+        rotateLeft();
+    } else if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        // Horizontal swipe
+        if (deltaX > 0) {
+            moveRight();
+        } else {
+            moveLeft();
+        }
+    } else if (deltaY > 0) {
+        // Vertical swipe down
+        playerDrop();
+    }
+});
 
 document.addEventListener('keydown', event => {
     if (event.keyCode === 37) {

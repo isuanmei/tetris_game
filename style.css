@@ -12,6 +12,7 @@ body {
     display: flex;
     flex-direction: row;
     align-items: center;
+    position: relative; /* 添加: 使子元素可以绝对定位 */
 }
 
 #tetris {
@@ -29,3 +30,15 @@ body {
     background-color: #000;
     border: 1px solid #000;
 }
+
+.game-credit {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #999; /* 淡淡的颜色 */
+    font-size: 12px;
+    background-color: #000; /* 添加: 黑色背景 */
+    padding: 5px; /* 添加: 内边距 */
+    border-radius: 5px; /* 添加: 圆角 */
+} /* 添加: 样式设置 */

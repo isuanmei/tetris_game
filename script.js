@@ -8,8 +8,13 @@ const arenaHeight = 20;
 const dropInterval = 1000; // 初始下落间隔时间为1秒
 let dropCounter = 0;
 let lastTime = 0;
-let score = localStorage.getItem('score') ? parseInt(localStorage.getItem('score'), 10) : 0;
-let highScore = localStorage.getItem('highScore') ? parseInt(localStorage.getItem('highScore'), 10) : 0;
+let score = localStorage.getItem('score');
+let highScore = localStorage.getItem('highScore');
+
+// 验证并初始化 score 和 highScore
+score = score !== null && !isNaN(score) ? parseInt(score, 10) : 0;
+highScore = highScore !== null && !isNaN(highScore) ? parseInt(highScore, 10) : 0;
+
 let status = localStorage.getItem('status') || 'Playing';
 
 // 更新分数显示
@@ -203,7 +208,7 @@ function arenaSweep() {
 }
 
 // 更新分数时，保存到 localStorage
-function updateScore(points) {
+function updateScore(points = 0) {
     score += points;
     document.getElementById('score').textContent = score;
     localStorage.setItem('score', score);

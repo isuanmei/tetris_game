@@ -8,7 +8,15 @@ const arenaHeight = 20;
 const dropInterval = 1000; // 初始下落间隔时间为1秒
 let dropCounter = 0;
 let lastTime = 0;
-let score = 0;
+let score = localStorage.getItem('score') ? parseInt(localStorage.getItem('score'), 10) : 0;
+let highScore = localStorage.getItem('highScore') ? parseInt(localStorage.getItem('highScore'), 10) : 0;
+let status = localStorage.getItem('status') || 'Playing';
+
+// 更新分数显示
+document.getElementById('score').textContent = score;
+document.getElementById('high-score').textContent = highScore;
+document.getElementById('status').textContent = status;
+
 let gameDuration = 0; // 添加: 用于跟踪游戏持续时间
 const speedIncreaseInterval = 300000; // 5分钟，单位为毫秒
 const speedIncreaseRate = 0.9; // 每次速度增加的比率
@@ -194,8 +202,18 @@ function arenaSweep() {
     }
 }
 
-function updateScore() {
-    document.getElementById('score').innerText = score;
+// 更新分数时，保存到 localStorage
+function updateScore(points) {
+    score += points;
+    document.getElementById('score').textContent = score;
+    localStorage.setItem('score', score);
+
+    // 更新最高分
+    if (score > highScore) {
+        highScore = score;
+        document.getElementById('high-score').textContent = highScore;
+        localStorage.setItem('highScore', highScore);
+    }
 }
 
 let isPaused = false; // 添加: 用于跟踪游戏是否暂停
@@ -333,6 +351,26 @@ document.addEventListener('keydown', event => {
         pauseGame();
     }
 });
+
+// 更新状态时，保存到 localStorage
+function updateStatus(newStatus) {
+    status = newStatus;
+    document.getElementById('status').textContent = status;
+    localStorage.setItem('status', status);
+}
+
+// 重置游戏时，清除 localStorage 中的数据
+function resetGame() {
+    localStorage.clear(); // 清除所有存储的数据
+
+    score = 0;
+    highScore = 0;
+    status = 'Playing';
+
+    document.getElementById('score').textContent = score;
+    document.getElementById('high-score').textContent = highScore;
+    document.getElementById('status').textContent = status;
+}
 
 playerReset();
 updateScore();

@@ -180,10 +180,13 @@ function playerMove(offset) {
 
 function playerReset() {
     const pieces = 'ILJOTSZ';
-    player.matrix = createPiece(pieces[pieces.length * Math.random() | 0]);
+    const nextPiece = createPiece(pieces[pieces.length * Math.random() | 0]);
+    player.matrix = nextPiece;
     player.pos.y = 0;
     player.pos.x = (arena[0].length / 2 | 0) - (player.matrix[0].length / 2 | 0);
-    drawNextMatrix(player.matrix);
+    // 生成下一个方块
+    const nextNextPiece = createPiece(pieces[pieces.length * Math.random() | 0]);
+    drawNextMatrix(nextNextPiece);
     if (collide(arena, player)) {
         arena.forEach(row => row.fill(0));
         score = 0;
